@@ -1,0 +1,89 @@
+erDiagram
+    %% PostgreSQL design assumption; all eight tables are in the SQL schema.
+    SUPPORTED_CATEGORY {
+        varchar category_code PK
+        varchar display_name
+        boolean is_active
+    }
+    PRODUCT_LISTING {
+        bigint listing_id PK
+        text image_ref
+        char image_sha256
+        varchar image_origin
+        varchar dataset_product_id
+        text title
+        text description
+        varchar seller_category
+        varchar text_origin
+        timestamp created_at
+    }
+    ANALYSIS_RUN {
+        bigint analysis_run_id PK
+        bigint listing_id FK
+        varchar status
+        varchar queue_state
+        varchar inconsistency_level
+        numeric quality_score
+        integer image_width_px
+        integer image_height_px
+        boolean is_blurred
+        varchar brightness_status
+        varchar cv_model_version
+        varchar nlp_lexicon_version
+        varchar ruleset_version
+        timestamp created_at
+        timestamp completed_at
+    }
+    VISUAL_PREDICTION {
+        bigint prediction_id PK
+        bigint analysis_run_id FK
+        varchar attribute
+        varchar model_source
+        varchar prediction_state
+        varchar predicted_category_code FK
+        varchar predicted_color
+        numeric confidence
+        boolean is_selected
+    }
+    TEXT_CLAIM {
+        bigint claim_id PK
+        bigint analysis_run_id FK
+        varchar attribute
+        varchar source_field
+        text matched_text
+        varchar canonical_value
+        varchar script_route
+    }
+    ANALYSIS_FINDING {
+        bigint finding_id PK
+        bigint analysis_run_id FK
+        varchar reason_code
+        varchar attribute_scope
+        varchar severity
+        numeric confidence
+        varchar visual_value
+        varchar claimed_value
+        text explanation
+    }
+    SUGGESTED_CORRECTION {
+        bigint suggestion_id PK
+        bigint analysis_run_id FK
+        text suggested_title
+        text suggested_description
+        text change_explanation
+    }
+    SELLER_DECISION {
+        bigint decision_id PK
+        bigint suggestion_id FK
+        varchar decision
+        text final_title
+        text final_description
+        timestamp decided_at
+    }
+    PRODUCT_LISTING ||--o{ ANALYSIS_RUN : references
+    ANALYSIS_RUN ||--o{ VISUAL_PREDICTION : references
+    ANALYSIS_RUN ||--o{ TEXT_CLAIM : references
+    ANALYSIS_RUN ||--o{ ANALYSIS_FINDING : references
+    ANALYSIS_RUN ||--o| SUGGESTED_CORRECTION : references
+    SUGGESTED_CORRECTION ||--o| SELLER_DECISION : references
+    SUPPORTED_CATEGORY o|--o{ VISUAL_PREDICTION : references

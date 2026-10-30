@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SmartListing Copilot — UI Prototype</title>
+<style>
+:root{--g:#1f5c4d;--g2:#2f7a67;--g3:#174a3e;--gl:#e6f1ed;--ink:#17211f;--mut:#5f6d68;--bg:#f4f5f2;--line:#dde2dd;--red:#a8322d;--redl:#fcecea;--amb:#8a5a12;--ambl:#fff5e0;--ambb:#f1d9a6;--blue:#25607f;--bluel:#e9f3f9;--r:14px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
+header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.bar{max-width:1120px;margin:auto;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px}
+.logo{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--g),var(--g2));display:grid;place-items:center;color:#fff}
+.brand span span{font-weight:400;color:var(--mut)}
+.pill{font-size:12px;font-weight:600;background:var(--ambl);color:var(--amb);border-radius:99px;padding:5px 12px}
+main{max-width:1120px;margin:0 auto;padding:36px 24px 24px}
+.eyebrow{color:var(--g);font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}
+h1{font-size:clamp(28px,4vw,40px);line-height:1.15;margin:8px 0 10px;letter-spacing:-.5px}
+h2{font-size:18px;margin:0 0 4px}
+.lead{color:var(--mut);max-width:640px;margin:0}
+.muted,small{color:var(--mut)}small{font-size:12.5px}
+.steps{display:flex;gap:10px;margin:28px 0 8px;padding:0;list-style:none;flex-wrap:wrap}
+.steps li{display:flex;align-items:center;gap:9px;padding:8px 14px 8px 8px;border-radius:99px;background:#fff;border:1px solid var(--line);font-size:13px;color:var(--mut);font-weight:600}
+.steps .n{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#eef1ed;font-size:12px}
+.steps li.on{color:var(--g);border-color:var(--g)}.steps li.on .n{background:var(--g);color:#fff}
+.steps li.done .n{background:var(--gl);color:var(--g)}
+.grid{display:grid;grid-template-columns:1.25fr .75fr;gap:22px;align-items:start}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:26px;margin:16px 0;box-shadow:0 6px 22px #1b2b2610}
+.card>.hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px}
+.field{margin:18px 0}
+label,.lbl{display:block;font-weight:700;font-size:13px;margin-bottom:6px}
+.req{color:var(--red)}
+input,textarea,select{font:inherit;width:100%;border:1px solid #cdd5cf;border-radius:10px;padding:11px 12px;background:#fff;color:var(--ink);transition:border .15s,box-shadow .15s}
+input:hover,textarea:hover,select:hover{border-color:#9db0a6}
+textarea{min-height:96px;resize:vertical}
+.inv{border-color:var(--red)!important;background:#fffafa}
+.drop{border:1.5px dashed #9db0a6;border-radius:12px;padding:26px;text-align:center;background:#fafcfa;cursor:pointer;transition:.15s}
+.drop:hover,.drop.over{background:var(--gl);border-color:var(--g)}
+.drop .ico{width:44px;height:44px;border-radius:50%;background:var(--gl);color:var(--g);display:grid;place-items:center;margin:0 auto 8px}
+.drop img{max-width:100%;max-height:200px;border-radius:8px;display:block;margin:auto}
+.fn{font-size:13px;color:var(--mut);margin-top:8px;word-break:break-all}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:10px;padding:11px 18px;font:inherit;font-weight:700;cursor:pointer;transition:.15s}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.primary{background:var(--g);color:#fff}.primary:hover:not(:disabled){background:var(--g3)}
+.secondary{background:#fff;color:var(--ink);border-color:#cdd5cf}.secondary:hover:not(:disabled){background:#f1f4f1}
+.link{background:none;border:0;color:var(--g);font-weight:700;cursor:pointer;padding:0;font:inherit;font-weight:700;text-decoration:underline}
+.full{width:100%}
+.err{color:var(--red);font-size:12.5px;margin-top:5px;min-height:0}
+.notice{padding:13px 15px;border-radius:10px;background:var(--ambl);color:var(--amb);margin:14px 0;font-size:14px}
+.good{background:var(--gl);color:var(--g)}.info{background:var(--bluel);color:var(--blue)}.bad{background:var(--redl);color:var(--red)}
+.hidden{display:none!important}
+.feat{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}.feat:last-of-type{border:0}
+.feat .n{flex:none;width:26px;height:26px;border-radius:8px;background:var(--gl);color:var(--g);display:grid;place-items:center;font-weight:800;font-size:13px}
+ul.sc{margin:8px 0 0;padding-left:18px;color:var(--mut);font-size:14px}ul.sc li{margin:4px 0}
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:4px 11px;font-size:12.5px;font-weight:700;background:var(--ambl);color:var(--amb);white-space:nowrap}
+.badge.good{background:var(--gl);color:var(--g)}.badge.info{background:var(--bluel);color:var(--blue)}
+.tag{display:inline-block;border-radius:7px;padding:3px 9px;background:var(--gl);color:var(--g);font-weight:600;font-size:13px}.tag.bad{background:var(--redl);color:var(--red)}.tag.nil{background:#eef1ed;color:var(--mut)}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,.drop:focus-visible{outline:3px solid #76a9c5;outline-offset:2px}
+footer{max-width:1120px;margin:auto;padding:8px 24px 36px;font-size:12.5px;color:var(--mut)}
+
+/* ---------- Analysis (loading) ---------- */
+.an{max-width:720px;margin:16px auto;padding:0;overflow:hidden}
+.an-top{padding:30px 32px 22px;display:flex;gap:20px;align-items:center;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#f8fbf9,#fff)}
+.an-thumb{flex:none;width:84px;height:84px;border-radius:14px;border:1px solid var(--line);object-fit:cover;background:#eef1ed;position:relative}
+.an-scan{position:relative;flex:none;width:84px;height:84px;border-radius:14px;overflow:hidden}
+.an-scan::after{content:"";position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--g2),transparent);box-shadow:0 0 14px 3px #2f7a6755;animation:scan 1.6s ease-in-out infinite}
+@keyframes scan{0%{top:0}50%{top:calc(100% - 3px)}100%{top:0}}
+.an-top h2{font-size:22px;margin:2px 0 4px}
+.an-top p{margin:0;color:var(--mut);font-size:14px}
+.an-top .meta{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:12px;font-weight:600;background:#eef1ed;color:var(--mut);border-radius:99px;padding:3px 10px;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.an-body{padding:24px 32px 10px}
+.pbar{height:8px;border-radius:99px;background:#e6ebe6;overflow:hidden}
+.pbar>i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--g),var(--g2));transition:width .5s ease}
+.pmeta{display:flex;justify-content:space-between;font-size:12.5px;color:var(--mut);margin:8px 0 18px;font-weight:600}
+.pipe{list-style:none;margin:0;padding:0}
+.pipe li{display:flex;gap:14px;align-items:flex-start;padding:12px 0;position:relative}
+.pipe li:not(:last-child)::before{content:"";position:absolute;left:13px;top:42px;bottom:-8px;width:2px;background:var(--line)}
+.pipe li.done:not(:last-child)::before{background:var(--g2)}
+.pi{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;background:#eef1ed;color:var(--mut);border:2px solid #eef1ed;z-index:1}
+.pipe li.done .pi{background:var(--g);border-color:var(--g);color:#fff}
+.pipe li.active .pi{background:#fff;border-color:var(--g);color:var(--g)}
+.pipe li.active .pi::after{content:"";width:12px;height:12px;border-radius:50%;border:2.5px solid #cfe0d9;border-top-color:var(--g);animation:s .8s linear infinite}
+.pipe li.active .pi span,.pipe li.pending .pi span.ck{display:none}
+.pipe li.pending .pi span.ck{display:none}
+.pipe li.done .pi span.nm,.pipe li.active .pi span.nm{display:none}
+.pt b{display:block;font-size:14.5px}
+.pt small{display:block;margin-top:1px}
+.pipe li.pending .pt{opacity:.55}
+.pst{margin-left:auto;font-size:12px;font-weight:700;color:var(--mut);white-space:nowrap;padding-top:4px}
+.pipe li.done .pst{color:var(--g)}.pipe li.active .pst{color:var(--amb)}
+.an-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:16px 32px 24px}
+.an-foot small{max-width:420px}
+@keyframes s{to{transform:rotate(360deg)}}
+
+/* ---------- Review results ---------- */
+.banner{display:flex;gap:18px;align-items:center;border-radius:var(--r);padding:22px 26px;margin:16px 0;border:1px solid var(--ambb);background:linear-gradient(135deg,#fff8e8,#fffdf7);box-shadow:0 6px 22px #1b2b2610}
+.banner[data-tone=ok]{border-color:#bfdcd2;background:linear-gradient(135deg,#eaf5f1,#fbfdfc)}
+.banner[data-tone=unc]{border-color:#c4dcea;background:linear-gradient(135deg,#eaf4fa,#fbfdfe)}
+.bicon{flex:none;width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:var(--amb);color:#fff;font-size:26px;font-weight:800}
+.banner[data-tone=ok] .bicon{background:var(--g)}.banner[data-tone=unc] .bicon{background:var(--blue)}
+.btext{flex:1;min-width:0}
+.btext h2{font-size:24px;margin:3px 0 4px;letter-spacing:-.3px}
+.btext p{margin:0;color:var(--mut);font-size:14px}
+.bmeta{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.bm{font-size:12px;background:#ffffffb8;border:1px solid var(--line);border-radius:8px;padding:3px 9px;color:var(--mut)}.bm b{color:var(--ink);font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 4px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.stat b{display:block;font-size:26px;line-height:1.1;letter-spacing:-.5px}
+.stat span{font-size:12px;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.7px}
+.stat.s-ok b{color:var(--g)}.stat.s-rev b{color:var(--amb)}.stat.s-unc b{color:var(--blue)}
+.rgrid{display:grid;grid-template-columns:300px 1fr;gap:22px;align-items:start}
+.rgrid>*{min-width:0}.rgrid .card{margin:12px 0}
+.thumb{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;border:1px solid var(--line);background:#eef1ed}
+.kv{margin:14px 0 0;padding-top:12px;border-top:1px solid var(--line)}
+.kv b{display:block;font-size:11.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.9px;margin-bottom:2px}.kv p{margin:0;font-size:14px}
+.sec-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.tw{overflow-x:auto;margin:12px -4px 0;padding:0 4px}
+table{width:100%;min-width:500px;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th,td{text-align:left;padding:13px 14px;border-bottom:1px solid var(--line);font-size:14px}
+tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
+thead th{font-size:11.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--mut);background:#f6f8f6}
+tbody th{font-weight:700;white-space:nowrap}
+.finding{display:flex;gap:12px;align-items:flex-start}
+.finding .fi{flex:none;width:28px;height:28px;border-radius:50%;background:currentColor;display:grid;place-items:center}
+.finding .fi i{font-style:normal;color:#fff;font-weight:800;font-size:14px}
+.sugbox{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:16px 0}
+.col{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fcfdfc}
+.col.new{border-color:#bfdcd2;background:#f6fbf9}
+.col h3{margin:0 0 12px;font-size:12px;text-transform:uppercase;letter-spacing:.9px;color:var(--mut);display:flex;align-items:center;gap:8px}
+.col h3 em{font-style:normal;background:var(--gl);color:var(--g);border-radius:99px;padding:2px 8px;font-size:11px;letter-spacing:.3px;text-transform:none}
+.orig{padding:11px 12px;background:#fff;border:1px solid var(--line);border-radius:10px;min-height:44px;font-size:14px;margin-bottom:14px}
+.orig mark{background:#fbd9d5;color:var(--red);border-radius:4px;padding:0 3px;font-weight:700;text-decoration:line-through}
+.demo{margin-top:22px;padding:14px 16px;border:1px dashed #b9c5be;border-radius:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--mut);background:#fafbf9}
+.demo .btn{padding:7px 13px;font-size:13px}
+.demo .btn.cur{border-color:var(--g);color:var(--g);background:var(--gl)}
+@media(max-width:860px){.rgrid{grid-template-columns:minmax(0,1fr)}.stats{grid-template-columns:repeat(2,1fr)}.thumb{max-width:240px}}
+@media(max-width:800px){.grid,.sugbox{grid-template-columns:1fr}.card{padding:18px}.bar{padding:12px 16px}main{padding:24px 16px}.steps li{font-size:12px}th,td{padding:10px 8px}
+  .an-top{padding:22px 18px 18px;flex-direction:column;align-items:flex-start}.an-body{padding:20px 18px 6px}.an-foot{padding:14px 18px 22px}
+  .banner{padding:18px;flex-wrap:wrap}.btext{flex:1 1 calc(100% - 72px)}.btext h2{font-size:21px}.banner .badge{margin-left:70px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <div class="brand"><div class="logo" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><span>SmartListing <span>Copilot</span></span></div>
+  <span class="pill">UI demo · simulated analysis</span>
+</div></header>
+<main>
+  <div class="eyebrow">Listing quality control</div>
+  <h1>Make every product listing<br>clearer and more consistent.</h1>
+  <p class="lead">Review the product type and color supported by the image against the claims made in your title and description.</p>
+  <ol class="steps" aria-label="Progress">
+    <li id="s1" class="on"><span class="n">1</span>Product details</li>
+    <li id="s2"><span class="n">2</span>Analysis</li>
+    <li id="s3"><span class="n">3</span>Review results</li>
+  </ol>
+
+  <section id="formView">
+    <div class="grid">
+      <form class="card" id="form" novalidate>
+        <div class="hd"><div><h2>Product information</h2><p class="muted" style="margin:0;font-size:14px">Fields marked <span class="req">*</span> are required in this prototype.</p></div></div>
+        <div class="field">
+          <span class="lbl" id="imgLbl">Product image <span class="req">*</span></span>
+          <input id="image" type="file" accept="image/*" hidden>
+          <div class="drop" id="drop" role="button" tabindex="0" aria-labelledby="imgLbl" aria-describedby="eimage">
+            <div id="empty"><div class="ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5 5 5M4 20h16"/></svg></div><b>Choose an image or drop it here</b><br><small>One readable product image</small></div>
+            <img id="preview" class="hidden" alt="Uploaded product image preview"><div id="filename" class="fn"></div>
+          </div>
+          <div id="eimage" class="err" role="alert"></div>
+        </div>
+        <div class="field"><label for="title">Product title <span class="req">*</span></label><input id="title" placeholder="e.g. Men's white running sneakers" aria-describedby="etitle"><div id="etitle" class="err" role="alert"></div></div>
+        <div class="field"><label for="desc">Product description <span class="req">*</span></label><textarea id="desc" placeholder="Enter seller-authored listing text" aria-describedby="edesc dnote"></textarea><small id="dnote">Description is user-entered test data, not a dataset field.</small><div id="edesc" class="err" role="alert"></div></div>
+        <div class="field"><label for="cat">Seller-stated category <span class="req">*</span></label><select id="cat" aria-describedby="ecat cnote"><option value="">Select category</option><option>Casual Shoes</option><option>Formal Shoes</option><option>Sports Shoes</option><option>Shirts</option><option>Handbags</option></select><small id="cnote">Provisional candidate set from the proposal; the final five classes are confirmed after EDA.</small><div id="ecat" class="err" role="alert"></div></div>
+        <div id="formerror" class="notice bad hidden" role="alert"></div>
+        <button class="btn primary full" id="submit" type="submit">Analyze listing →</button>
+        <p style="margin:12px 0 0;text-align:center"><button type="button" class="link" id="sample">Fill with sample listing</button></p>
+      </form>
+      <aside>
+        <div class="card"><h2>How it works</h2>
+          <div class="feat"><span class="n">1</span><div><b>Read the image</b><br><span class="muted">Proposed CV output: product type and color.</span></div></div>
+          <div class="feat"><span class="n">2</span><div><b>Read the listing text</b><br><span class="muted">Extract supported type and color claims.</span></div></div>
+          <div class="feat"><span class="n">3</span><div><b>Compare attributes</b><br><span class="muted">Explain match, mismatch or uncertainty.</span></div></div>
+          <div class="notice good" style="margin-bottom:0"><b>You stay in control.</b> Suggestions are reviewed by you. Nothing is published.</div>
+        </div>
+        <div class="card"><h2>Scope guardrails</h2><ul class="sc"><li>Product type and color only</li><li>No size, material or price validation</li><li>Fashion Product Images Small is the MVP dataset context</li><li>No real model or backend is connected</li></ul></div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===== Step 2: Analysis ===== -->
+  <section id="loading" class="hidden" aria-live="polite">
+    <div class="card an">
+      <div class="an-top">
+        <div class="an-scan"><img id="anImg" class="an-thumb" alt="Image being analyzed"></div>
+        <div>
+          <div class="eyebrow">Step 2 · Analysis</div>
+          <h2>Analyzing listing…</h2>
+          <p>Comparing what the image shows with what your text claims.</p>
+          <div class="meta"><span class="chip" id="anTitle"></span><span class="chip" id="anCat"></span></div>
+        </div>
+      </div>
+      <div class="an-body">
+        <div class="pbar" role="progressbar" aria-label="Analysis progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="pbarWrap"><i id="pbar"></i></div>
+        <div class="pmeta"><span id="pLabel">Starting…</span><span id="pPct">0%</span></div>
+        <ol class="pipe" id="pipe">
+          <li class="pending" data-i="0"><span class="pi"><span class="nm">1</span><span class="ck">✓</span></span><div class="pt"><b>Inputs validated</b><small class="muted">Image, title, description and category received.</small></div><span class="pst">Waiting</span></li>
+          <li class="pending" data-i="1"><span class="pi"><span class="nm">2</span><span class="ck">✓</span></span><div class="pt"><b>Reading the image</b><small class="muted">Product type and color supported by the image.</small></div><span class="pst">Waiting</span></li>
+          <li class="pending" data-i="2"><span class="pi"><span class="nm">3</span><span class="ck">✓</span></span><div class="pt"><b>Reading the listing text</b><small class="muted">Type and color claims in title and description.</small></div><span class="pst">Waiting</span></li>
+          <li class="pending" data-i="3"><span class="pi"><span class="nm">4</span><span class="ck">✓</span></span><div class="pt"><b>Comparing supported attributes</b><small class="muted">Match, mismatch or uncertainty.</small></div><span class="pst">Waiting</span></li>
+        </ol>
+      </div>
+      <div class="an-foot">
+        <small class="muted">Simulated loading state. Duplicate submission is blocked while analysis runs.</small>
+        <button class="btn secondary" id="cancel" type="button">Cancel demo</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Step 3: Review results ===== -->
+  <section id="results" class="hidden">
+    <div class="banner" id="banner" data-tone="warn" role="status">
+      <div class="bicon" id="bicon" aria-hidden="true">!</div>
+      <div class="btext"><div class="eyebrow">Analysis summary</div><h2 id="heading">Review recommended</h2><p id="summary">Demo result only — not generated by a model or backend.</p><div class="bmeta" id="bmeta" aria-label="Review details"></div></div>
+      <span id="badge" class="badge">⚠ Review recommended</span>
+    </div>
+    <div class="stats" aria-label="Result counts">
+      <div class="stat"><b id="stChecked">2</b><span>Attributes checked</span></div>
+      <div class="stat s-ok"><b id="stOk">1</b><span>Consistent</span></div>
+      <div class="stat s-rev"><b id="stRev">1</b><span>Needs review</span></div>
+      <div class="stat s-unc"><b id="stUnc">0</b><span>Uncertain</span></div>
+    </div>
+
+    <div class="rgrid">
+      <div class="card">
+        <h2>Submitted listing</h2>
+        <img id="resultImg" class="thumb" alt="Submitted product image" style="margin-top:12px"><div id="resultName" class="fn"></div>
+        <div class="kv"><b>Title</b><p id="outTitle"></p></div>
+        <div class="kv"><b>Description</b><p id="outDesc"></p></div>
+        <div class="kv"><b>Seller-stated category</b><p id="outCat"></p></div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="sec-h"><div><h2>Attribute comparison</h2><p class="muted" style="margin:0;font-size:14px">Confidence is not verified correctness. Only product type and color are in scope.</p></div></div>
+          <div class="tw"><table><thead><tr><th>Attribute</th><th>Image-supported</th><th>Text claim</th><th>Status</th></tr></thead><tbody>
+            <tr><th scope="row">Product type</th><td><span class="tag">Sports Shoes</span></td><td><span class="tag">Sports Shoes</span></td><td><span class="badge good">✓ Consistent</span></td></tr>
+            <tr><th scope="row">Color</th><td id="colorimg"><span class="tag">Black</span></td><td id="colorclaim"></td><td id="colorstatus"></td></tr>
+          </tbody></table></div>
+          <div id="finding" class="notice bad"><div class="finding"><span class="fi"><i>!</i></span><div><b>Possible color contradiction · COLOR_MISMATCH · Major.</b> Simulated image output = Black; simulated text claim = White. Different color families are Major under the rule table; values are illustrative.</div></div></div>
+          <div id="uncertain" class="notice info hidden"><div class="finding"><span class="fi"><i>i</i></span><div><b>Output uncertain or unavailable.</b> Do not infer a confirmed match or mismatch; use manual review.</div></div></div>
+          <div id="clean" class="notice good hidden"><div class="finding"><span class="fi"><i>✓</i></span><div><b>No mismatch detected in this demo.</b> This does not guarantee correctness.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="sugCard"><h2>Suggested correction</h2><p class="muted" style="margin:0;font-size:14px">Template-based example. Review before acting; nothing is published automatically.</p>
+      <div class="sugbox">
+        <div class="col"><h3>Original</h3>
+          <span class="lbl">Title</span><div class="orig" id="origTitle"></div>
+          <span class="lbl">Description</span><div class="orig" id="origDesc" style="margin-bottom:0"></div></div>
+        <div class="col new"><h3>Suggested <em>editable</em></h3>
+          <label for="suggestTitle">Suggested title</label><input id="suggestTitle" style="margin-bottom:14px">
+          <label for="suggestDesc">Suggested description</label><textarea id="suggestDesc"></textarea></div>
+      </div>
+      <div class="actions"><button class="btn primary" id="accept" type="button">Accept suggestion</button><button class="btn secondary" id="edit" type="button">Edit suggestion</button><button class="btn secondary" id="ignore" type="button">Ignore</button></div>
+      <div id="choice" class="notice info hidden" role="status"></div>
+    </div>
+    <div class="nav"><button class="btn secondary" id="back" type="button">← Edit listing</button><button class="btn primary" id="finish" type="button">Finish review</button></div>
+    <div class="demo"><b>Walkthrough states:</b><button class="btn secondary" id="mismatchBtn" type="button">Mismatch</button><button class="btn secondary" id="noMismatch" type="button">No mismatch</button><button class="btn secondary" id="uncertainBtn" type="button">Uncertain output</button><button class="btn secondary" id="failBtn" type="button">Simulate failure</button></div>
+  </section>
+
+  <section id="failure" class="hidden">
+    <div class="card" style="max-width:640px;margin:16px auto"><div class="notice bad" role="alert"><b>Analysis could not be completed</b><br>This is a service failure, not a mismatch finding. Your entered fields are preserved and no result has been fabricated.</div>
+    <button class="btn primary" id="retry" type="button">Return to listing</button></div>
+  </section>
+</main>
+<footer>Prototype boundary: all analysis values are hard-coded demo scenarios. No CV model, NLP service, API, persistence or publishing integration is connected.</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+let file=null,url=null,values={},timers=[];
+const SAMPLE_IMG='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#eef1ed"/><ellipse cx="200" cy="318" rx="150" ry="14" fill="#d3dad4"/><path d="M60 270c0-40 6-86 20-110 8-14 24-16 36-6 14 12 30 30 52 30 30 0 46-24 74-24 34 0 76 34 94 84 6 18 6 34-6 40H72c-8 0-12-6-12-14z" fill="#1c1f1e"/><path d="M62 276h262c10 0 14 8 10 18-4 10-14 16-26 16H78c-14 0-20-10-16-34z" fill="#f2f2ee"/><path d="M140 176l26 20m-6-36 28 22m-6-34 28 22" stroke="#8c918f" stroke-width="6" stroke-linecap="round"/></svg>');
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function view(id){
+  ['formView','loading','results','failure'].forEach(x=>$(x).classList.toggle('hidden',x!==id));
+  const st=id==='results'?2:id==='loading'?1:0;
+  ['s1','s2','s3'].forEach((s,i)=>{$(s).className=i<st?'done':i===st?'on':'';$(s).querySelector('.n').textContent=i<st?'✓':i+1});
+  window.scrollTo({top:0});
+}
+function setFile(f){
+  if(!f)return;
+  if(!f.type.startsWith('image/')){$('eimage').textContent='Choose a readable image file.';file=null;return}
+  file=f;$('eimage').textContent='';if(url&&url.startsWith('blob:'))URL.revokeObjectURL(url);
+  showImg(URL.createObjectURL(f),f.name);
+}
+function showImg(src,name){url=src;$('preview').src=src;$('preview').classList.remove('hidden');$('empty').classList.add('hidden');$('filename').textContent=name}
+$('drop').onclick=()=>$('image').click();
+$('drop').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('image').click()}};
+$('image').onchange=e=>setFile(e.target.files[0]);
+$('drop').ondragover=e=>{e.preventDefault();$('drop').classList.add('over')};
+$('drop').ondragleave=()=>$('drop').classList.remove('over');
+$('drop').ondrop=e=>{e.preventDefault();$('drop').classList.remove('over');setFile(e.dataTransfer.files[0])};
+$('sample').onclick=()=>{
+  file={name:'sample-black-sneaker.svg',sample:true};showImg(SAMPLE_IMG,'sample-black-sneaker.svg (demo image)');
+  $('title').value="Men's white running sneakers";
+  $('desc').value='Lightweight white sneakers with breathable mesh and a cushioned sole, ideal for daily running.';
+  $('cat').value='Sports Shoes';clearErrors();
+};
+function clearErrors(){['eimage','etitle','edesc','ecat'].forEach(x=>$(x).textContent='');['title','desc','cat'].forEach(x=>$(x).classList.remove('inv'));$('formerror').classList.add('hidden')}
+
+/* ----- Analysis pipeline (simulated) ----- */
+const STAGES=[['Validating inputs…',25],['Reading the image…',50],['Reading the listing text…',75],['Comparing supported attributes…',100]];
+function setStage(i){ // i = index of active stage; -1 = all done
+  [...$('pipe').children].forEach((li,k)=>{
+    const done=i===-1||k<i,act=k===i;
+    li.className=done?'done':act?'active':'pending';
+    li.querySelector('.pst').textContent=done?'Done':act?'In progress':'Waiting';
+  });
+  const pct=i===-1?100:(i===0?8:STAGES[i-1][1]+6);
+  $('pbar').style.width=pct+'%';$('pbarWrap').setAttribute('aria-valuenow',pct);
+  $('pPct').textContent=pct+'%';$('pLabel').textContent=i===-1?'Complete':STAGES[i][0];
+}
+function runAnalysis(){
+  $('anImg').src=url||SAMPLE_IMG;$('anTitle').textContent=values.title;$('anCat').textContent=values.cat;
+  setStage(0);
+  [650,1300,1950].forEach((t,k)=>timers.push(setTimeout(()=>setStage(k+1),t)));
+  timers.push(setTimeout(()=>setStage(-1),2550));
+  timers.push(setTimeout(()=>{result('mismatch');$('submit').disabled=false},2900));
+}
+function stopAnalysis(){timers.forEach(clearTimeout);timers=[]}
+
+$('form').onsubmit=e=>{
+  e.preventDefault();clearErrors();
+  const chk=[[!file,'eimage','Upload a product image.',null],[!$('title').value.trim(),'etitle','Enter a product title.','title'],[!$('desc').value.trim(),'edesc','Enter a product description.','desc'],[!$('cat').value,'ecat','Select the seller-stated category.','cat']];
+  const bad=chk.filter(c=>c[0]);
+  if(bad.length){bad.forEach(c=>{$(c[1]).textContent=c[2];if(c[3])$(c[3]).classList.add('inv')});
+    $('formerror').textContent='Complete the '+bad.length+' required field'+(bad.length>1?'s':'')+' highlighted above.';$('formerror').classList.remove('hidden');
+    const first=bad[0];(first[3]?$(first[3]):$('drop')).focus();return}
+  values={title:$('title').value.trim(),desc:$('desc').value.trim(),cat:$('cat').value};
+  $('submit').disabled=true;view('loading');runAnalysis();
+};
+$('cancel').onclick=()=>{stopAnalysis();$('submit').disabled=false;view('formView')};
+
+/* ----- Results ----- */
+let curMode='mismatch';
+function result(mode){
+  stopAnalysis();curMode=mode;
+  if(!values.title){values={title:$('title').value||"Men's white running sneakers",desc:$('desc').value||'Lightweight white sneakers with breathable mesh.',cat:$('cat').value||'Sports Shoes'}}
+  $('outTitle').textContent=values.title;$('outDesc').textContent=values.desc;$('outCat').textContent=values.cat;
+  $('resultName').textContent=file?file.name:'Demo image';$('resultImg').src=url||SAMPLE_IMG;
+  const mark=s=>esc(s).replace(/white/ig,m=>'<mark>'+m+'</mark>');
+  $('origTitle').innerHTML=mark(values.title);$('origDesc').innerHTML=mark(values.desc);
+  $('suggestTitle').value=values.title.replace(/white/ig,'black');$('suggestDesc').value=values.desc.replace(/white/ig,'black');
+  $('choice').classList.add('hidden');
+  $('clean').classList.toggle('hidden',mode!=='clean');$('uncertain').classList.toggle('hidden',mode!=='uncertain');$('finding').classList.toggle('hidden',mode!=='mismatch');
+  const M={
+    mismatch:{meta:[['Reason code','COLOR_MISMATCH'],['Severity','Major'],['Inconsistency level','Medium'],['Queue','Needs review']],h:'Review recommended',b:'⚠ Review recommended',bc:'badge',s:'Demo result only — not generated by a model or backend.',c:'<span class="tag bad">White</span>',st:'<span class="badge">⚠ Possible mismatch</span>',tone:'warn',ic:'!',n:[2,1,1,0]},
+    clean:{meta:[['Reason code','none'],['Severity','none'],['Inconsistency level','Low'],['Queue','Ready to publish (review label only)']],h:'No mismatch detected',b:'✓ No mismatch',bc:'badge good',s:'Simulated clean comparison; not proof of correctness.',c:'<span class="tag">Black</span>',st:'<span class="badge good">✓ Consistent</span>',tone:'ok',ic:'✓',n:[2,2,0,0]},
+    uncertain:{meta:[['Reason code','LOW_CONFIDENCE'],['Severity','not assigned'],['Inconsistency level','Low'],['Queue','Needs review']],h:'Manual review recommended',b:'ⓘ Uncertain',bc:'badge info',s:'Simulated uncertainty; no confirmed mismatch is inferred.',c:'<span class="tag nil">Not extracted</span>',st:'<span class="badge info">ⓘ Uncertain</span>',tone:'unc',ic:'i',n:[2,1,0,1]}
+  }[mode];
+  $('heading').textContent=M.h;$('badge').textContent=M.b;$('badge').className=M.bc;$('summary').textContent=M.s;
+  $('colorclaim').innerHTML=M.c;$('colorstatus').innerHTML=M.st;
+  $('colorimg').innerHTML=mode==='uncertain'?'<span class="tag nil">Unavailable</span>':'<span class="tag">Black</span>';
+  $('bmeta').innerHTML=M.meta.map(([k,v])=>'<span class="bm">'+k+': <b>'+v+'</b></span>').join('');$('banner').dataset.tone=M.tone;$('bicon').textContent=M.ic;
+  ['stChecked','stOk','stRev','stUnc'].forEach((id,i)=>$(id).textContent=M.n[i]);
+  $('accept').disabled=$('edit').disabled=mode!=='mismatch';
+  $('sugCard').classList.toggle('hidden',mode==='clean');
+  [['mismatchBtn','mismatch'],['noMismatch','clean'],['uncertainBtn','uncertain']].forEach(([id,m])=>$(id).classList.toggle('cur',m===mode));
+  view('results');
+}
+const say=t=>{$('choice').textContent=t;$('choice').classList.remove('hidden')};
+$('accept').onclick=()=>{$('title').value=$('suggestTitle').value;$('desc').value=$('suggestDesc').value;say('Demo choice recorded: Accept. The suggested text was copied into the form; nothing was published.')};
+$('edit').onclick=()=>{say('Edit the suggested fields above, then choose Accept to copy your edited text into the form.');$('suggestTitle').focus()};
+$('ignore').onclick=()=>say('Demo choice recorded: Ignore. The original listing remains unchanged.');
+$('back').onclick=$('finish').onclick=$('retry').onclick=()=>view('formView');
+$('mismatchBtn').onclick=()=>result('mismatch');$('noMismatch').onclick=()=>result('clean');$('uncertainBtn').onclick=()=>result('uncertain');$('failBtn').onclick=()=>{stopAnalysis();view('failure')};
+</script>
+</body>
+</html>
